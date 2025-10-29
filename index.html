@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAIRA - AI Robot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000000;
+            min-height: 100vh;
+            overflow: hidden;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .eye-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18vw;
+            background: #000000;
+        }
+
+        .eye {
+            width: 32vmin;
+            height: 32vmin;
+            position: relative;
+        }
+
+        /* Eyeball base */
+        .eyeball {
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 
+                0 0 40px rgba(255, 50, 50, 0.6),
+                inset -5px -5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* Red iris background */
+        .iris {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 65%;
+            height: 65%;
+            background: 
+                radial-gradient(circle at 35% 35%, 
+                    #ff1a1a 0%,
+                    #ff0000 20%,
+                    #dd0000 40%,
+                    #cc0000 60%,
+                    #990000 80%,
+                    #660000 100%
+                );
+            border-radius: 50%;
+            box-shadow: 
+                0 0 40px rgba(255, 0, 0, 0.8),
+                inset 0 0 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Inner ring */
+        .inner-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 75%;
+            height: 75%;
+            border: 3px solid #000000;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Tomoe symbols - proper Sharingan pattern */
+        .tomoe-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            animation: spin-slow 10s linear infinite;
+        }
+
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .tomoe {
+            position: absolute;
+            width: 28%;
+            height: 28%;
+            left: 50%;
+            top: 50%;
+            transform-origin: 0% 0%;
+        }
+
+        .tomoe::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .tomoe::after {
+            content: '';
+            position: absolute;
+            width: 45%;
+            height: 45%;
+            background: #000000;
+            border-radius: 0 100% 100% 0;
+            right: -20%;
+            top: -10%;
+            transform: rotate(45deg);
+        }
+
+        .tomoe:nth-child(1) {
+            transform: translate(-50%, -150%) rotate(0deg);
+        }
+
+        .tomoe:nth-child(2) {
+            transform: translate(-50%, -150%) rotate(120deg);
+        }
+
+        .tomoe:nth-child(3) {
+            transform: translate(-50%, -150%) rotate(240deg);
+        }
+
+        /* Black pupil */
+        .pupil {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30%;
+            height: 30%;
+            background: #000000;
+            border-radius: 50%;
+            z-index: 20;
+            box-shadow: 
+                0 0 20px rgba(0, 0, 0, 0.8),
+                inset 0 0 10px rgba(255, 0, 0, 0.2);
+        }
+
+        /* Eye shine/reflection */
+        .shine {
+            position: absolute;
+            top: 22%;
+            left: 28%;
+            width: 18%;
+            height: 18%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.7) 40%, transparent 70%);
+            border-radius: 50%;
+            z-index: 25;
+        }
+
+        /* Small shine */
+        .shine-small {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            width: 8%;
+            height: 8%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.7), transparent 60%);
+            border-radius: 50%;
+            z-index: 25;
+        }
+
+        /* Upper eyelid */
+        .eyelid-top {
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            border-radius: 50%;
+            z-index: 30;
+            transition: top 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Bottom eyelid */
+        .eyelid-bottom {
+            position: absolute;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            border-radius: 50%;
+            z-index: 30;
+            transition: bottom 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Blinking animation */
+        .eye.blink .eyelid-top {
+            top: 0;
+            transition: top 0.08s cubic-bezier(0.4, 0, 1, 1);
+        }
+
+        .eye.blink .eyelid-bottom {
+            bottom: 0;
+            transition: bottom 0.08s cubic-bezier(0.4, 0, 1, 1);
+        }
+
+        /* Active glow */
+        .eye.active .iris {
+            animation: glow-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { 
+                box-shadow: 
+                    0 0 40px rgba(255, 0, 0, 0.8),
+                    inset 0 0 30px rgba(0, 0, 0, 0.3);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 60px rgba(255, 0, 0, 1),
+                    0 0 80px rgba(255, 0, 0, 0.6),
+                    inset 0 0 40px rgba(255, 0, 0, 0.2);
+            }
+        }
+
+        /* Blood vessels */
+        .veins {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0.25;
+        }
+
+        .vein {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(220, 50, 50, 0.6), transparent);
+            transform-origin: left center;
+        }
+
+        .vein:nth-child(1) {
+            width: 35%;
+            top: 20%;
+            left: 5%;
+            transform: rotate(-15deg);
+        }
+
+        .vein:nth-child(2) {
+            width: 40%;
+            top: 75%;
+            left: 10%;
+            transform: rotate(10deg);
+        }
+
+        .vein:nth-child(3) {
+            width: 30%;
+            top: 50%;
+            right: 5%;
+            transform: rotate(-20deg);
+        }
+
+        /* Status badge */
+        .status {
+            position: fixed;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 6px 18px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid rgba(255, 0, 0, 0.4);
+            border-radius: 15px;
+            color: #ff3333;
+            font-size: 11px;
+            letter-spacing: 2px;
+            z-index: 100;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+
+        .status.show {
+            opacity: 1;
+        }
+
+        /* Connection indicator */
+        .connection {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            width: 10px;
+            height: 10px;
+            background: #ff0000;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+            z-index: 100;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .connection.off {
+            background: #444;
+            box-shadow: none;
+            animation: none;
+        }
+
+        @media (max-width: 600px) {
+            .eye-container {
+                gap: 15vw;
+            }
+            .eye {
+                width: 35vmin;
+                height: 35vmin;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="status" id="status">INITIALIZING</div>
+    <div class="connection" id="connection"></div>
+
+    <div class="eye-container">
+        <div class="eye" id="leftEye">
+            <div class="eyeball">
+                <div class="veins">
+                    <div class="vein"></div>
+                    <div class="vein"></div>
+                    <div class="vein"></div>
+                </div>
+                <div class="iris">
+                    <div class="inner-ring"></div>
+                    <div class="tomoe-ring">
+                        <div class="tomoe"></div>
+                        <div class="tomoe"></div>
+                        <div class="tomoe"></div>
+                    </div>
+                    <div class="pupil"></div>
+                </div>
+                <div class="shine"></div>
+                <div class="shine-small"></div>
+                <div class="eyelid-top"></div>
+                <div class="eyelid-bottom"></div>
+            </div>
+        </div>
+
+        <div class="eye" id="rightEye">
+            <div class="eyeball">
+                <div class="veins">
+                    <div class="vein"></div>
+                    <div class="vein"></div>
+                    <div class="vein"></div>
+                </div>
+                <div class="iris">
+                    <div class="inner-ring"></div>
+                    <div class="tomoe-ring">
+                        <div class="tomoe"></div>
+                        <div class="tomoe"></div>
+                        <div class="tomoe"></div>
+                    </div>
+                    <div class="pupil"></div>
+                </div>
+                <div class="shine"></div>
+                <div class="shine-small"></div>
+                <div class="eyelid-top"></div>
+                <div class="eyelid-bottom"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+        const socket = io();
+        const leftEye = document.getElementById('leftEye');
+        const rightEye = document.getElementById('rightEye');
+        const status = document.getElementById('status');
+        const connection = document.getElementById('connection');
+
+        // Natural blinking function
+        function blinkEyes() {
+            leftEye.classList.add('blink');
+            rightEye.classList.add('blink');
+            
+            setTimeout(() => {
+                leftEye.classList.remove('blink');
+                rightEye.classList.remove('blink');
+            }, 120);
+            
+            // Random interval between 2-5 seconds
+            const nextBlink = 2000 + Math.random() * 3000;
+            setTimeout(blinkEyes, nextBlink);
+        }
+
+        // Start blinking after initial delay
+        setTimeout(blinkEyes, 2500);
+
+        // Socket connection
+        socket.on('connect', () => {
+            console.log('✅ Connected');
+            connection.classList.remove('off');
+            leftEye.classList.add('active');
+            rightEye.classList.add('active');
+            status.textContent = 'CONNECTED';
+            status.classList.add('show');
+            setTimeout(() => status.classList.remove('show'), 2000);
+        });
+
+        socket.on('disconnect', () => {
+            console.log('❌ Disconnected');
+            connection.classList.add('off');
+            leftEye.classList.remove('active');
+            rightEye.classList.remove('active');
+            status.textContent = 'DISCONNECTED';
+            status.classList.add('show');
+        });
+
+        socket.on('status_update', (data) => {
+            status.textContent = data.message.toUpperCase();
+            status.classList.add('show');
+            setTimeout(() => status.classList.remove('show'), 3000);
+        });
+
+        socket.on('user_input', () => {
+            status.classList.remove('show');
+        });
+
+        socket.on('ai_response', () => {
+            status.classList.remove('show');
+        });
+    </script>
+</body>
+</html>
