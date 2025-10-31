@@ -17,49 +17,6 @@
             min-height: 100vh;
             overflow: hidden;
             font-family: 'Orbitron', monospace;
-            color: #ff3333;
-        }
-
-        /* Sci-fi boot message */
-        #bootMessage {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 6vw;
-            text-align: center;
-            letter-spacing: 6px;
-            color: #ff2020;
-            text-shadow:
-                0 0 10px rgba(255, 0, 0, 0.7),
-                0 0 20px rgba(255, 0, 0, 0.6),
-                0 0 40px rgba(255, 0, 0, 0.4);
-            animation: pulseGlow 1.5s ease-in-out infinite, scanLines 6s linear infinite;
-            user-select: none;
-            z-index: 50;
-        }
-
-        @keyframes pulseGlow {
-            0%, 100% {
-                opacity: 1;
-                text-shadow:
-                    0 0 10px rgba(255, 0, 0, 0.8),
-                    0 0 25px rgba(255, 0, 0, 0.6),
-                    0 0 45px rgba(255, 0, 0, 0.4);
-            }
-            50% {
-                opacity: 0.8;
-                text-shadow:
-                    0 0 15px rgba(255, 60, 60, 1),
-                    0 0 30px rgba(255, 0, 0, 0.8),
-                    0 0 60px rgba(255, 0, 0, 0.5);
-            }
-        }
-
-        @keyframes scanLines {
-            0% { clip-path: inset(0 0 90% 0); }
-            50% { clip-path: inset(0 0 0 0); }
-            100% { clip-path: inset(90% 0 0 0); }
         }
 
         /* Fullscreen video */
@@ -71,14 +28,6 @@
             height: 100vh;
             object-fit: cover;
             background: #000;
-            display: none; /* hidden until connected */
-            opacity: 0;
-            transition: opacity 1s ease;
-        }
-
-        video#eyeVideo.show {
-            display: block;
-            opacity: 1;
         }
 
         /* Status badge */
@@ -99,7 +48,9 @@
             transition: opacity 0.3s;
         }
 
-        .status.show { opacity: 1; }
+        .status.show {
+            opacity: 1;
+        }
 
         /* Connection indicator */
         .connection {
@@ -131,11 +82,8 @@
     <div class="status" id="status">INITIALIZING</div>
     <div class="connection" id="connection"></div>
 
-    <!-- Boot Message -->
-    <div id="bootMessage">SYSTEM BOOTING...<br>PLEASE WAIT</div>
-
     <!-- Fullscreen video -->
-    <video id="eyeVideo" muted loop playsinline>
+    <video id="eyeVideo" autoplay muted loop playsinline>
         <source src="eye_animation.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
@@ -145,8 +93,6 @@
         const socket = io();
         const status = document.getElementById('status');
         const connection = document.getElementById('connection');
-        const eyeVideo = document.getElementById('eyeVideo');
-        const bootMessage = document.getElementById('bootMessage');
 
         socket.on('connect', () => {
             console.log('✅ Connected');
@@ -154,11 +100,6 @@
             status.textContent = 'CONNECTED';
             status.classList.add('show');
             setTimeout(() => status.classList.remove('show'), 2000);
-
-            // Hide boot message and show video
-            bootMessage.style.display = 'none';
-            eyeVideo.classList.add('show');
-            eyeVideo.play().catch(err => console.warn('Autoplay blocked:', err));
         });
 
         socket.on('disconnect', () => {
@@ -166,11 +107,6 @@
             connection.classList.add('off');
             status.textContent = 'DISCONNECTED';
             status.classList.add('show');
-
-            // Pause video and show boot message again
-            eyeVideo.pause();
-            eyeVideo.classList.remove('show');
-            bootMessage.style.display = 'block';
         });
 
         socket.on('status_update', (data) => {
@@ -179,8 +115,13 @@
             setTimeout(() => status.classList.remove('show'), 3000);
         });
 
-        socket.on('user_input', () => status.classList.remove('show'));
-        socket.on('ai_response', () => status.classList.remove('show'));
+        socket.on('user_input', () => {
+            status.classList.remove('show');
+        });
+
+        socket.on('ai_response', () => {
+            status.classList.remove('show');
+        });
     </script>
 </body>
 </html>
