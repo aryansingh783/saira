@@ -146,12 +146,13 @@ python database-editor.py
 
 ## 🧑‍💻 Developers
 
-**Team Saira – Rawat Senior Secondary School, Jaipur**
+**Team Saira – Rawat Senior Secondary School, Jaipur, Rajsthan, india**
 
-- Aryan  
-- Umang  
-- Arvin  
-- Monu  
+-----------------BATCH-2025------------------------
+- Aryan Singh   (Class 11 Commerce Hindi Medium) 
+- Umang Kumar   (Class 11 Science Hindi Medium)
+- Arvin Yadav   (Class 11 Science Hindi Medium) 
+- Monu Adhikari (Class 11 Science Hindi Medium)
 
 ---
 
