@@ -151,7 +151,7 @@ python database-editor.py
 -----------------BATCH-2025------------------------
 - Aryan Singh   (Class 11 Commerce Hindi Medium) 
 - Umang Kumar   (Class 11 Science Hindi Medium)
-- Arvin Yadav   (Class 11 Science Hindi Medium) 
+- Arvind Yadav   (Class 11 Science Hindi Medium) 
 - Monu Adhikari (Class 11 Science Hindi Medium)
 
 ---
