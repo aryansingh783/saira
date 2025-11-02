@@ -1,0 +1,10 @@
+flask
+flask-socketio
+flask-cors
+ollama
+speechrecognition
+edge-tts
+pygame
+requests
+asyncio
+tk
