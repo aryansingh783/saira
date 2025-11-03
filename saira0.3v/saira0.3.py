@@ -19,8 +19,7 @@ except Exception:
     KEYBOARD_AVAILABLE = False
 
 # ---------------------- CONFIG ----------------------
-# Replace these with your actual Gemini API keys. Put at least 1.
-API_KEYS = ["AIzaSyAYf8jxbtZj9C9hG3AGFCgp6JMcIxvwDaQ"]
+API_KEYS = ["=====API-KEY-HERE======="]
 
 # Choose Gemini model (1.5-flash is faster; 2.5-flash more capable)
 GEMINI_MODEL = "gemini-2.5-flash"
