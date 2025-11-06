@@ -5,6 +5,14 @@ It can **listen, understand, speak, and answer** both general and educational qu
 
 ---
 
+## 📺 Demo Video
+
+[![Saira AI Demo](https://img.youtube.com/vi/ED13fA-0HNM/maxresdefault.jpg)](https://youtu.be/ED13fA-0HNM)
+
+**Watch the full demo:** [https://youtu.be/ED13fA-0HNM](https://youtu.be/ED13fA-0HNM)
+
+---
+
 ## 📂 Project Structure
 
 | File | Description |
@@ -44,7 +52,7 @@ pip install -r requirements.txt
 - asyncio  
 - tk  
 
-> 🗣 You’ll also need **PyAudio** installed for microphone input:  
+> 🗣 You'll also need **PyAudio** installed for microphone input:  
 > ```bash
 > pip install pyaudio
 > ```  
@@ -146,7 +154,7 @@ python database-editor.py
 
 ## 🧑‍💻 Developers
 
-**Team Saira – Rawat Senior Secondary School, Jaipur, Rajsthan, india**
+**Team Saira – Rawat Senior Secondary School, Jaipur, Rajasthan, India**
 
 -----------------BATCH-2025------------------------
 - Aryan Singh   (Class 11 Commerce Hindi Medium) 
@@ -167,3 +175,9 @@ Commercial use or redistribution without permission is prohibited.
 
 If you like this project, please **star the repository** on GitHub 🌟  
 Your support helps make Saira even smarter and more human-like!
+
+---
+
+## 📹 More Information
+
+For a detailed walkthrough and demonstration of all features, check out our YouTube video: [https://youtu.be/ED13fA-0HNM](https://youtu.be/ED13fA-0HNM)
