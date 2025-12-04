@@ -1,59 +1,57 @@
 #include <Servo.h>
 
-Servo leftHand, rightHand, headPan, headTilt;
-int angleLeft = 90;
-int angleRight = 90;
-int anglePan = 90;
-int angleTilt = 90;
+Servo handServo;
+Servo headServo;
+
+float handAngle = 90;
+float headAngle = 90;
+
+int handSpeed = 0;
+int headSpeed = 0;
 
 void setup() {
-  leftHand.attach(3);
-  rightHand.attach(5);
-  headPan.attach(6);
-  headTilt.attach(9);
+  Serial.begin(115200);
 
-  Serial.begin(9600);
-  Serial.println("Robot Ready: W/S Left Hand | E/D Right Hand | J/L Head Pan | I/K Head Tilt");
+  handServo.attach(9);
+  headServo.attach(10);
+
+  handServo.write(handAngle);
+  headServo.write(headAngle);
 }
 
 void loop() {
+
+  // Check serial commands
   if (Serial.available()) {
     char c = Serial.read();
 
-    switch (c) {
-      // Left Hand
-      case 'w': angleLeft += 10; break;
-      case 's': angleLeft -= 10; break;
+    // Hand
+    if (c == 'w') handSpeed = +1;    // up
+    if (c == 's') handSpeed = -1;    // down
 
-      // Right Hand
-      case 'e': angleRight += 10; break;
-      case 'd': angleRight -= 10; break;
+    // Head
+    if (c == 'a') headSpeed = -1;    // left
+    if (c == 'd') headSpeed = +1;    // right
 
-      // Head Pan
-      case 'l': anglePan += 10; break;
-      case 'j': anglePan -= 10; break;
-
-      // Head Tilt
-      case 'i': angleTilt += 10; break;
-      case 'k': angleTilt -= 10; break;
+    // Reset
+    if (c == 'r') {
+      handAngle = 90;
+      headAngle = 90;
     }
-
-    // Limit all to 0–180
-    angleLeft = constrain(angleLeft, 0, 180);
-    angleRight = constrain(angleRight, 0, 180);
-    anglePan = constrain(anglePan, 0, 180);
-    angleTilt = constrain(angleTilt, 0, 180);
-
-    // Update servo positions
-    leftHand.write(angleLeft);
-    rightHand.write(angleRight);
-    headPan.write(anglePan);
-    headTilt.write(angleTilt);
-
-    // Print angles for debug
-    Serial.print("Left: "); Serial.print(angleLeft);
-    Serial.print(" | Right: "); Serial.print(angleRight);
-    Serial.print(" | Pan: "); Serial.print(anglePan);
-    Serial.print(" | Tilt: "); Serial.println(angleTilt);
   }
+
+  // Update angles
+  handAngle += handSpeed * 0.5;
+  headAngle += headSpeed * 0.5;
+
+  // Limit
+  handAngle = constrain(handAngle, 0, 180);
+  headAngle = constrain(headAngle, 0, 180);
+
+  // Output
+  handServo.write(handAngle);
+  headServo.write(headAngle);
+
+  // slow speed
+  delay(10);
 }
