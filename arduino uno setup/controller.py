@@ -1,24 +1,36 @@
-import serial, time
-from pynput import keyboard
+import serial
+import keyboard
+import time
 
-# Change COM port according to Arduino
-arduino = serial.Serial('COM3', 9600)
-time.sleep(2)
-print("Connected to Robot! Use W/S, E/D, J/L, I/K to control. ESC to quit.")
+ser = serial.Serial("COM5", 115200)
 
-def on_press(key):
-    try:
-        if key.char in ['w', 's', 'e', 'd', 'j', 'l', 'i', 'k']:
-            arduino.write(key.char.encode())
-            print(f"Sent: {key.char}")
-    except AttributeError:
-        pass
+while True:
+    # default stop
+    hand = 0
+    head = 0
 
-def on_release(key):
-    if key == keyboard.Key.esc:
-        print("Exiting...")
-        arduino.close()
-        return False
+    # Hand
+    if keyboard.is_pressed('w'):
+        hand = 1
+    elif keyboard.is_pressed('s'):
+        hand = -1
 
-with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
-    listener.join()
+    # Head
+    if keyboard.is_pressed('a'):
+        head = -1
+    elif keyboard.is_pressed('d'):
+        head = 1
+
+    # Send commands
+    if hand == 1:
+        ser.write(b'w')
+    elif hand == -1:
+        ser.write(b's')
+
+    if head == -1:
+        ser.write(b'a')
+    elif head == 1:
+        ser.write(b'd')
+
+    # small delay
+    time.sleep(0.02)
